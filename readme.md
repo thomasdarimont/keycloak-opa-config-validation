@@ -137,6 +137,19 @@ $ kcadm get clients/$clientUuid -r demo | conftest -p policies/main.rego test -
 2 tests, 2 passed, 0 warnings, 0 failures, 0 exceptions
 ```
 
+Output as JSON:
+```
+$ kcadm get clients/$clientUuid -r demo | conftest -p policies/main.rego test -o json -
+
+[
+	{
+		"filename": "",
+		"namespace": "main",
+		"successes": 2
+	}
+]
+```
+
 ## Debugging
 
 You can use the `opa run` command to test policy expressions in a REPL.
