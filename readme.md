@@ -23,6 +23,8 @@ alias opa="docker run -it --rm -v $(pwd):/project:z openpolicyagent/opa:0.27.0-r
 
 ## Keycloak Setup
 
+Start Keycloak container
+```
 KC_SERVER_URL=http://localhost:8080/auth
 KC_ADMIN_USER=admin
 KC_ADMIN_PASSWORD=admin
@@ -36,13 +38,22 @@ docker run \
   -e KEYCLOAK_PASSWORD=$KC_ADMIN_PASSWORD \
   -p 8080:8080 \
   quay.io/keycloak/keycloak:12.0.4
+```
 
+Configure kcadm
+
+```
 kcadm config credentials --server $KC_SERVER_URL --realm master --user admin --password $KC_ADMIN_PASSWORD
+```
 
 ### Create Demo Realm
+
+```
 kcadm create realms -s realm=$KC_REALM -s enabled=true
+```
 
 ### Create public OIDC client for a SPA
+```
 kcadm create clients -r $KC_REALM  -f - << EOF
   {
     "protocol": "openid-connect",
@@ -59,15 +70,20 @@ kcadm create clients -r $KC_REALM  -f - << EOF
     "publicClient": true
   }
 EOF
+```
 
 ### Resolve id of generated client
+```
 KC_CLIENT=demo-client
 clientUuid=$(kcadm get clients -r $KC_REALM  --fields 'id,clientId' | jq -c ".[] | select(.clientId == \"$KC_CLIENT\")" | jq -r .id)
+```
 
 ## Testing our client policies
 
 ### Evaluate policies for client
+```
 kcadm get clients/$clientUuid -r demo | conftest -p policies/main.rego test -
+```
 
 Output:
 ```
@@ -98,7 +114,7 @@ $ kcadm get clients/$clientUuid -r demo | conftest -p policies/main.rego test -
 
 ## Debugging
 
-You can use the OPA run command to test policy expressions in a REPL.
+You can use the `opa run` command to test policy expressions in a REPL.
 
 ```
 $ opa run
