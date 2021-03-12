@@ -101,7 +101,6 @@ FAIL - - main - Clients shall not use ROPC.
 kcadm update clients/$clientUuid -r $KC_REALM -s "implicitFlowEnabled=false" -s "directAccessGrantsEnabled=false"
 ```
 
-
 ### Evaluate policies for client again
 
 Output:
@@ -115,6 +114,8 @@ $ kcadm get clients/$clientUuid -r demo | conftest -p policies/main.rego test -
 ## Debugging
 
 You can use the `opa run` command to test policy expressions in a REPL.
+
+Below is a quick example session.
 
 ```
 $ opa run
