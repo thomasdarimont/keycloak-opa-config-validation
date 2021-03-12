@@ -8,9 +8,13 @@ The example policy can be found in the [policies](policies) folder.
 
 ## Preparation
 
+In this example we use three commands `kcadm`, `conftest` and `opa` to create our environment, as well as testing and developing policies.
+
 Define aliases
 ```
 # Convenience alias for kcadm.sh
+
+mkdir -p $(echo $HOME)/.acme/.keycloak
 
 alias kcadm="docker run --net=host -i --user=1000:1000 --rm -v $(echo $HOME)/.acme/.keycloak:/opt/jboss/.keycloak:z --entrypoint /opt/jboss/keycloak/bin/kcadm.sh jboss/keycloak:12.0.4"
 
@@ -93,6 +97,28 @@ FAIL - - main - Clients shall not use Implicit Flow.
 FAIL - - main - Clients shall not use ROPC.
 
 2 tests, 0 passed, 0 warnings, 2 failures, 0 exceptions
+```
+
+Output as JSON:
+
+```
+$ kcadm get clients/$clientUuid -r demo | conftest --policy policies/main.rego test --output json -
+
+[
+	{
+		"filename": "",
+		"namespace": "main",
+		"successes": 0,
+		"failures": [
+			{
+				"msg": "Clients shall not use ROPC."
+			},
+			{
+				"msg": "Clients shall not use Implicit Flow."
+			}
+		]
+	}
+]
 ```
 
 ### Fix problems
