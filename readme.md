@@ -1,4 +1,4 @@
-Keycloak OPA Integration
+Keycloak OPA Config Validation
 ----
 
 PoC for validating Keycloak configuration with [Open Policy Agent](https://www.openpolicyagent.org/). In this example we use OPA's ["rego" policy definition language](https://www.openpolicyagent.org/docs/latest/policy-language/)
